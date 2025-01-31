@@ -1,19 +1,22 @@
 import pygame
+import random
 from config import *
 
 class Food:
-    def __init__(self):
-        self.color = FOOD_COLOR
-        self.position = [GRID_SIZE * 7, GRID_SIZE * 7]
-        self.is_food_on_screen = True
+    def __init__(self, image_path, grid_size=GRID_SIZE):
+        self.image = pygame.image.load(image_path)  # Загружаем изображение еды
+        self.image = pygame.transform.scale(self.image, (grid_size, grid_size))  # Масштабируем под клетку
+        self.grid_size = grid_size
+        self.position = [grid_size * random.randint(0, (WIDTH // grid_size) - 1),
+                         grid_size * random.randint(0, (HEIGHT // grid_size) - 1)]
 
     def relocate(self, snake_body):
+        """Перемещает еду на случайную позицию, избегая тела змейки"""
         while True:
-            self.position = [GRID_SIZE * random.randrange(0, WIDTH // GRID_SIZE),
-                             GRID_SIZE * random.randrange(0, HEIGHT // GRID_SIZE)]
+            self.position = [self.grid_size * random.randint(0, (WIDTH // self.grid_size) - 1),
+                             self.grid_size * random.randint(0, (HEIGHT // self.grid_size) - 1)]
             if self.position not in snake_body:
                 break
-        self.is_food_on_screen = True
 
     def draw(self, screen):
-        pygame.draw.rect(screen, self.color, (self.position[0], self.position[1], GRID_SIZE, GRID_SIZE))
+        screen.blit(self.image, (self.position[0], self.position[1]))  # Отображаем изображение

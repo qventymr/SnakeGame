@@ -1,9 +1,11 @@
 import random
 
-
+# Размеры по умолчанию (они изменятся в main.py)
 WIDTH = 600
 HEIGHT = 600
-GRID_SIZE = 20
+GRID_ROWS = 20  # Количество строк
+GRID_COLS = 20  # Количество столбцов
+GRID_SIZE = WIDTH // GRID_COLS  # Размер клетки (будет обновляться в main.py)
 FPS = 10
 
 # Цвета

@@ -4,15 +4,29 @@ from food import Food
 from config import *
 
 class SnakeGame:
-    def __init__(self, screen, best_score):
+    def __init__(self, screen, grid_size, snake_color, food_image):
         self.screen = screen
-        self.clock = pygame.time.Clock()
-        self.snake = Snake()
-        self.food = Food()
+        self.grid_size = grid_size
+        self.snake = Snake(snake_color, grid_size)
+        self.food = Food(food_image, grid_size)  # Теперь передаём путь к изображению еды
         self.running = True
-        self.score = 0
-        self.best_score = best_score
+        self.clock = pygame.time.Clock()
         self.font = pygame.font.SysFont("Arial", 24)
+        self.score = 0
+
+    def draw_grid(self):
+        """Рисует шахматное поле фиксированного размера"""
+        for row in range(HEIGHT // self.grid_size):
+            for col in range(WIDTH // self.grid_size):
+                color = COLOR_1 if (row + col) % 2 == 0 else COLOR_2
+                pygame.draw.rect(self.screen, color, (col * self.grid_size, row * self.grid_size, self.grid_size, self.grid_size))
+
+    def draw(self):
+        self.draw_grid()
+        self.snake.draw(self.screen)
+        self.food.draw(self.screen)
+        pygame.display.flip()
+
 
     def update(self):
         self.snake.move()
@@ -20,9 +34,7 @@ class SnakeGame:
             self.running = False
         if self.snake.eat_food(self.food):
             self.food.relocate(self.snake.body)
-            self.score += 1
-            if self.score > self.best_score:
-                self.best_score = self.score
+            self.score += 1  # Теперь ошибки не будет
 
 
     def handle_events(self):
@@ -40,22 +52,10 @@ class SnakeGame:
             self.food.relocate(self.snake.body)
             self.score += 1
 
-    def draw_grid(self):
-        for row in range(HEIGHT // GRID_SIZE):
-            for col in range(WIDTH // GRID_SIZE):
-                color = COLOR_1 if (row + col) % 2 == 0 else COLOR_2
-                pygame.draw.rect(self.screen, color, (col * GRID_SIZE, row * GRID_SIZE, GRID_SIZE, GRID_SIZE))
 
     def draw_score(self):
         score_text = self.font.render(f"Score: {self.score}", True, FACE_COLOR)
         self.screen.blit(score_text, (10, 10))
-
-    def draw(self):
-        self.draw_grid()
-        self.snake.draw(self.screen)
-        self.food.draw(self.screen)
-        self.draw_score()
-        pygame.display.flip()
 
     def run(self):
         while self.running:
