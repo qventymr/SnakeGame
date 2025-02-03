@@ -3,7 +3,7 @@ from game import SnakeGame
 from menu import MainMenu
 from config import *
 
-if __name__ == "__main__":
+def main_run():
     pygame.init()
 
     # Создаём окно фиксированного размера
@@ -17,3 +17,6 @@ if __name__ == "__main__":
     # Запускаем игру с выбранным изображением еды
     game = SnakeGame(screen, GRID_SIZE, menu.selected_snake_color, menu.selected_food_image)
     game.run()
+    
+if __name__ == "__main__":
+    main_run()

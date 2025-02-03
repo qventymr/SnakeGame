@@ -14,8 +14,54 @@ class Snake:
         self.body.pop()
 
     def draw(self, screen):
-        for segment in self.body:
-            pygame.draw.rect(screen, self.color, (*segment, self.grid_size, self.grid_size))
+        # Рисуем голову
+        head_x, head_y = self.body[0]
+        pygame.draw.rect(
+            screen,
+            self.color,
+            pygame.Rect(head_x, head_y, self.grid_size, self.grid_size),
+        )
+
+        # Рисуем глаза на голове
+        eye_radius = self.grid_size // 5
+        eye_offset_x = self.grid_size // 4
+        eye_offset_y = self.grid_size // 4
+
+        # Левый глаз
+        pygame.draw.circle(
+            screen,
+            (255, 255, 255),  # Белый цвет
+            (head_x + eye_offset_x, head_y + eye_offset_y),
+            eye_radius,
+        )
+        pygame.draw.circle(
+            screen,
+            (0, 0, 0),  # Чёрный цвет
+            (head_x + eye_offset_x, head_y + eye_offset_y),
+            eye_radius // 2,
+        )
+
+        # Правый глаз
+        pygame.draw.circle(
+            screen,
+            (255, 255, 255),  # Белый цвет
+            (head_x + self.grid_size - eye_offset_x, head_y + eye_offset_y),
+            eye_radius,
+        )
+        pygame.draw.circle(
+            screen,
+            (0, 0, 0),  # Чёрный цвет
+            (head_x + self.grid_size - eye_offset_x, head_y + eye_offset_y),
+            eye_radius // 2,
+        )
+
+        # Рисуем остальные сегменты тела
+        for segment in self.body[1:]:
+            pygame.draw.rect(
+                screen,
+                self.color,
+                pygame.Rect(segment[0], segment[1], self.grid_size, self.grid_size),
+            )
 
 
     def change_direction(self, key):
